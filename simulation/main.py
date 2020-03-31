@@ -35,79 +35,79 @@ app.layout = html.Div(
             id='graph-update',
             interval=1 * 1000
         ),
-        html.Div([
-            html.H3('Column 1'),
-            dcc.Graph(id='live-graph',
-                      style={
-                          'background-image': 'url(https://raw.githubusercontent.com/amasend/virus_simulation/master/simulation/krakow_map.png)'},
-                      animate=True,
-                      figure={
-                          'data': [
-                              {'x': [individual.x for individual in infected],
-                               'y': [individual.y for individual in infected],
-                               'type': 'scatter',
-                               'mode': 'markers',
-                               'name': 'Infected',
-                               'marker': {'color': 'red',
-                                          'size': 10}
-                               },
-                              {'x': [individual.x for individual in healthy],
-                               'y': [individual.y for individual in healthy],
-                               'type': 'scatter',
-                               'mode': 'markers',
-                               'name': u'Healthy',
-                               'marker': {'color': 'green',
-                                          'size': 5}
-                               },
-                          ],
-                          'layout': {
-                              'plot_bgcolor': 'rgba(0,0,0,0)',
-                              'paper_bgcolor': 'rgba(0,0,0,0)',
-                              'font': {
-                                  'color': colors['text']
-                              },
-                              'autosize': True,
-                              'height': 900,
-                              'xaxis': dict(range=[0, 1000], showgrid=False, zeroline=False, tickmode="array",
-                                            tickvals=[]),
-                              'yaxis': dict(range=[0, 1000], showgrid=False, zeroline=False, tickmode="array",
-                                            tickvals=[])
-                          }
-                      })
-        ], className="six columns"),
-        html.Div([
-            html.H3('Column 2', style={'fontColor': colors['text']}),
-            dcc.Graph(id='live-graph_2',
-                      animate=True,
-                      figure={
-                          'data': [
-                              {'x': graph_2_x,
-                               'y': graph_2_y_infected,
-                               'type': 'scatter',
-                               'name': 'Infected count',
-                               'marker': {'color': 'red'}
-                               },
-                              {'x': graph_2_x,
-                               'y': graph_2_y_healthy,
-                               'type': 'scatter',
-                               'name': u'Healthy count',
-                               'marker': {'color': 'green'}
-                               },
-                          ],
-                          'layout': {
-                              'plot_bgcolor': colors['background'],
-                              'paper_bgcolor': colors['background'],
-                              'font': {
-                                  'color': colors['text']
-                              },
-                              'autosize': True,
-                              'height': 900,
-                              'xaxis': dict(range=[0, len(graph_2_x)]),
-                              'yaxis': dict(range=[0, graph_2_y_infected[0] + graph_2_y_healthy[0]])
-                          }
-                      })
-        ], className="six columns")
-    ], className='row', style={"columnCount": 2})
+        dcc.Graph(id='live-graph',
+                  style={
+                      'background-image': 'url(https://raw.githubusercontent.com/amasend/virus_simulation/master/simulation/krakow_map.png)',
+                      'background-repeat': 'no-repeat',
+                      'background-position': 'center',
+                      'background-size': '1650px 800px',
+                  },
+                  animate=True,
+                  figure={
+                      'data': [
+                          {'x': [individual.x for individual in infected],
+                           'y': [individual.y for individual in infected],
+                           'type': 'scatter',
+                           'mode': 'markers',
+                           'name': 'Infected',
+                           'marker': {'color': 'red',
+                                      'size': 10}
+                           },
+                          {'x': [individual.x for individual in healthy],
+                           'y': [individual.y for individual in healthy],
+                           'type': 'scatter',
+                           'mode': 'markers',
+                           'name': u'Healthy',
+                           'marker': {'color': 'green',
+                                      'size': 5}
+                           },
+                      ],
+                      'layout': {
+                          'plot_bgcolor': 'rgba(0,0,0,0)',
+                          'paper_bgcolor': 'rgba(0,0,0,0)',
+                          'font': {
+                              'color': colors['text']
+                          },
+                          'autosize': True,
+                          'height': 900,
+                          'width': 1850,
+                          'xaxis': dict(range=[0, 1000], showgrid=False, zeroline=False, tickmode="array",
+                                        tickvals=[]),
+                          'yaxis': dict(range=[0, 1000], showgrid=False, zeroline=False, tickmode="array",
+                                        tickvals=[])
+                      }
+                  })
+        , dcc.Graph(id='live-graph_2',
+                    animate=True,
+                    figure={
+                        'data': [
+                            {'x': graph_2_x,
+                             'y': graph_2_y_infected,
+                             'type': 'scatter',
+                             'name': 'Infected count',
+                             'marker': {'color': 'red'}
+                             },
+                            {'x': graph_2_x,
+                             'y': graph_2_y_healthy,
+                             'type': 'scatter',
+                             'name': u'Healthy count',
+                             'marker': {'color': 'green'}
+                             },
+                        ],
+                        'layout': {
+                            'plot_bgcolor': colors['background'],
+                            'paper_bgcolor': colors['background'],
+                            'font': {
+                                'color': colors['text']
+                            },
+                            'autosize': True,
+                            'height': 900,
+                            'xaxis': dict(range=[0, len(graph_2_x)]),
+                            'yaxis': dict(range=[0, graph_2_y_infected[0] + graph_2_y_healthy[0]])
+                        }
+                    })
+
+    ], className='row', style={"columnCount": 1})
 )
 
 
