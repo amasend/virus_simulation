@@ -7,7 +7,40 @@ import plotly
 import plotly.graph_objs as go
 from simulation.individuals import Individual
 
-individuals = [Individual(start_infection_probability=0.01, infection_probability=0.8) for i in range(200)]
+import plotly.graph_objects as gos
+
+mapbox_access_token = open("/home/amadeusz/PycharmProjects/virus_simulation/simulation/.mapbox_token").read()
+
+fig = gos.Figure(gos.Scattermapbox(
+    lat=['50.064'],
+    lon=['19.944'],
+    mode='markers',
+    marker=gos.scattermapbox.Marker(
+        size=5
+    )
+))
+
+fig.update_layout(
+    autosize=True,
+    paper_bgcolor='rgba(0,0,0,0)',
+    hovermode='closest',
+    margin=dict(l=0, r=0, t=0, b=0),
+    width=1850,
+    height=900,
+    mapbox=dict(
+        accesstoken=mapbox_access_token,
+        style='dark',
+        bearing=0,
+        center=dict(
+            lat=50.05,
+            lon=19.895
+        ),
+        pitch=0,
+        zoom=12
+    ),
+)
+
+individuals = [Individual(start_infection_probability=0.01, infection_probability=0.8) for i in range(1000)]
 infected = []
 healthy = []
 
@@ -36,47 +69,49 @@ app.layout = html.Div(
             interval=1 * 1000
         ),
         dcc.Graph(id='live-graph',
-                  style={
-                      'background-image': 'url(https://raw.githubusercontent.com/amasend/virus_simulation/master/simulation/krakow_map.png)',
-                      'background-repeat': 'no-repeat',
-                      'background-position': 'center',
-                      'background-size': '1650px 800px',
-                  },
-                  animate=True,
-                  figure={
-                      'data': [
-                          {'x': [individual.x for individual in infected],
-                           'y': [individual.y for individual in infected],
-                           'type': 'scatter',
-                           'mode': 'markers',
-                           'name': 'Infected',
-                           'marker': {'color': 'red',
-                                      'size': 10}
-                           },
-                          {'x': [individual.x for individual in healthy],
-                           'y': [individual.y for individual in healthy],
-                           'type': 'scatter',
-                           'mode': 'markers',
-                           'name': u'Healthy',
-                           'marker': {'color': 'green',
-                                      'size': 5}
-                           },
-                      ],
-                      'layout': {
-                          'plot_bgcolor': 'rgba(0,0,0,0)',
-                          'paper_bgcolor': 'rgba(0,0,0,0)',
-                          'font': {
-                              'color': colors['text']
-                          },
-                          'autosize': True,
-                          'height': 900,
-                          'width': 1850,
-                          'xaxis': dict(range=[0, 1000], showgrid=False, zeroline=False, tickmode="array",
-                                        tickvals=[]),
-                          'yaxis': dict(range=[0, 1000], showgrid=False, zeroline=False, tickmode="array",
-                                        tickvals=[])
-                      }
-                  })
+                  # style={
+                  #     'background-image': 'url(https://raw.githubusercontent.com/amasend/virus_simulation/master/simulation/krakow_map.png)',
+                  #     'background-repeat': 'no-repeat',
+                  #     'background-position': 'center',
+                  #     'background-size': '1650px 800px',
+                  # },
+                  # animate=True,
+                  figure=fig,
+                  # figure={
+                  #     'data': [
+                  #         {'x': [individual.x for individual in infected],
+                  #          'y': [individual.y for individual in infected],
+                  #          'type': 'scatter',
+                  #          'mode': 'markers',
+                  #          'name': 'Infected',
+                  #          'marker': {'color': 'red',
+                  #                     'size': 10}
+                  #          },
+                  #         {'x': [individual.x for individual in healthy],
+                  #          'y': [individual.y for individual in healthy],
+                  #          'type': 'scatter',
+                  #          'mode': 'markers',
+                  #          'name': u'Healthy',
+                  #          'marker': {'color': 'green',
+                  #                     'size': 5}
+                  #          },
+                  #     ],
+                  #     'layout': {
+                  #         'plot_bgcolor': 'rgba(0,0,0,0)',
+                  #         'paper_bgcolor': 'rgba(0,0,0,0)',
+                  #         'font': {
+                  #             'color': colors['text']
+                  #         },
+                  #         'autosize': True,
+                  #         'height': 900,
+                  #         'width': 1850,
+                  #         'xaxis': dict(range=[0, 1000], showgrid=False, zeroline=False, tickmode="array",
+                  #                       tickvals=[]),
+                  #         'yaxis': dict(range=[0, 1000], showgrid=False, zeroline=False, tickmode="array",
+                  #                       tickvals=[])
+                  #     }
+                  # }
+                  )
         , dcc.Graph(id='live-graph_2',
                     animate=True,
                     figure={
@@ -121,17 +156,48 @@ def update_graph_scatter(interval):
             if individual.infected:
                 infected.append(individual)
 
-    data = [
-        plotly.graph_objs.Scatter(
-            x=[individual.x for individual in infected],
-            y=[individual.y for individual in infected]
-        ),
-        plotly.graph_objs.Scatter(
-            x=[individual.x for individual in healthy],
-            y=[individual.y for individual in healthy]
-        )]
-
-    return {'data': data}
+    return {
+        'data': [{
+            'lat': [individual.lat for individual in healthy],
+            'lon': [individual.lon for individual in healthy],
+            'mode': 'markers',
+            'marker': gos.scattermapbox.Marker(
+                size=5,
+                color='blue',
+                symbol='circle'
+            ),
+            'type': 'scattermapbox'
+        },
+            {
+                'lat': [individual.lat for individual in infected],
+                'lon': [individual.lon for individual in infected],
+                'mode': 'markers',
+                'marker': gos.scattermapbox.Marker(
+                    size=5,
+                    color='red',
+                    symbol='circle'
+                ),
+                'type': 'scattermapbox'
+            }
+        ],
+        'layout': dict(autosize=True,
+                       hovermode='closest',
+                       paper_bgcolor='rgba(0,0,0,0)',
+                       margin=dict(l=0, r=0, t=0, b=0),
+                       width=1850,
+                       height=900,
+                       mapbox=dict(
+                           accesstoken=mapbox_access_token,
+                           style='dark',
+                           center=dict(
+                               lat=50.05,
+                               lon=19.895
+                           ),
+                           bearing=0,
+                           pitch=0,
+                           zoom=12
+                       ))
+    }
 
 
 @app.callback(Output('live-graph_2', 'figure'), inputs=[Input('graph-update', 'n_intervals')])
